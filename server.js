@@ -34,25 +34,22 @@ function search(request, response) {
   const searchStr = request.body.search[0];
   const searchType = request.body.search[1];
 
-
-
   if(searchType === 'title') {
     url += `+intitle:${searchStr}`;
   } else if(searchType === 'author') {
     url += `+inauthor:${searchStr}`;
   }
-}
  
 //search engine
  return superagent.get(url)
     .then(result => {
       // console.log(result.body.items[1]);
-      let books = result.body.items.map(book => new GoogleBook(book.volumeInfo)))
+      let books = result.body.items.map(book => new GoogleBook(book.volumeInfo))
       // console.log(GoogleBook.title);
         .then (result => 
-      response.render('pages/searches/show', books))
-        
-    .catch(error => handleError(error));
+      response.render('pages/searches/show', {books}))
+      .catch(error => handleError(error));
+        } 
              
 //Constructor
 function GoogleBook(book) {
