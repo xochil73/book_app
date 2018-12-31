@@ -44,8 +44,9 @@ if(searchType === 'title') {
 
 return superagent.get(url)
   .then(result => {
-    let books = result.body.volumeInfo.map(book => new Book(book));
-    response.render('pages/error', {books});
+    console.log(result.body.items)
+    let books = result.body.items.map(book => new GoogleBook(book));
+    response.render('pages/error', books);
   })
 }
 //Constructor
