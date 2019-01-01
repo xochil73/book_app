@@ -3,6 +3,7 @@
 
 //dependencies
 const express = require('express');
+const pg = require('pg');
 const superagent = require('superagent');
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,6 +16,13 @@ app.post('/searches', search);
 app.get('/index.ejs', ejsTest);
 app.set('view engine', 'ejs');
 
+app.post('/task', addTask);
+app.get('/addTask', showForm);
+
+const client = new pg.Client('postgres://sarkis7412:armenian@localhost:5432/books_app');
+client.connect();
+client.on('err', err => console.error(err));
+
 
 function ejsTest(req, res) {
   res.render('pages/index.ejs');
@@ -25,6 +33,16 @@ app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 
 function home(request, response) {
   response.render('pages/index.ejs');
+}
+
+function addTask(req, res) {
+  const values = Object.values(req.body);
+  const SQL = `INSERT INTO tasks
+              (title, author, isbn, image_url, description)
+              values($1, $2, $3, $4, $5)`
+
+  client.query(SQL, values)
+    .then(res.redirect('/'))
 }
 
 
