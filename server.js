@@ -1,6 +1,5 @@
 'use strict';
 
-
 //dependencies
 const express = require('express');
 const pg = require('pg');
@@ -17,7 +16,7 @@ app.get('/index.ejs', ejsTest);
 app.set('view engine', 'ejs');
 
 app.post('/task', addTask);
-app.get('/addTask', showForm);
+app.get('/addTask', ejsTest);
 
 const client = new pg.Client('postgres://sarkis7412:armenian@localhost:5432/books_app');
 client.connect();
@@ -36,55 +35,27 @@ function home(request, response) {
 }
 
 function addTask(req, res) {
+
   const values = Object.values(req.body);
   const SQL = `INSERT INTO tasks
               (title, author, isbn, image_url, description)
               values($1, $2, $3, $4, $5)`
-
-  client.query(SQL, values)
+  console.log('||||||||||||||||||||||||', client.query(SQL, values))
+  return client.query(SQL, values)
     .then(res.redirect('/'))
+    .catch(error => {
+      console.log(error)
+      res.send(error)
+    })
 }
 
-
-//Cody's code
-
-
-// function newSearch(request, response) {
-//   response.render('pages/index');
-// }
-
-// function createSearch(request, response) {
-
-
-
-
-
-// }
 //Helper Functions
 function search(request, response) {
+
   let url = 'https://www.googleapis.com/books/v1/volumes?q=';
-  // let url = 'https://www.googleapis.com/books/v1/volumes?q=search';
-  // console.log(request.body.search);
-  // const searchStr = request.body.search[0];
-  // const searchType = request.body.search[1];
 
   if (request.body.search[1] === 'title') { url += `+intitle:${request.body.search[0]}`; }
   if (request.body.search[1] === 'author') { url += `+inauthor:${request.body.search[0]}`; }
-
-  // if(searchType === 'title') {
-  //   url += `+intitle:${searchStr}`;
-  // } else if(searchType === 'author') {
-  //   url += `+inauthor:${searchStr}`;
-  // }
-
-
-  //search engine
-  // superagent.get(url)
-  //   .then(apiResponse => apiResponse.body.items.map(book => new GoogleBook(book.volumeInfo)))
-
-  //   .then(results => response.render('searches/show', {searchResults: results}))
-  //   .catch(err => handleError(err, response));
-
 
   return superagent.get(url)
     .then(result => {
@@ -105,14 +76,6 @@ function GoogleBook(book) {
   this.description = book.description || 'No description available';
   this.id = book.industryIdentifiers ? `${book.industryIdentifiers[0].identifier}` : '';
 }
-// function GoogleBook(book) {
-//   // console.log(book);
-//   this.title = book.volumeInfo.title || 'this book does not have a title';
-//   this.author = book.volumeInfo.authors || 'this book does not have an author';
-//   this.description = book.volumeInfo.description || 'this book does not have a description';
-//   this.imageLinks = book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks.thumbnail : 'https://i.imgur.com/J5LVHEL.jpeg';
-// }
-
 
 // Error handler
 function handleError(err, res) {

@@ -1,4 +1,3 @@
---Warning 
 
 DROP DATABASE books_app;
 CREATE DATABASE books_app;
@@ -9,7 +8,6 @@ CREATE TABLE books (
     author VARCHAR(255),
     isbn NUMERIC,
     image_url VARCHAR(255),
-    description TEXT,
-    
+    description TEXT 
 );
 
