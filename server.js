@@ -1,84 +1,119 @@
 'use strict';
 
-//dependencies
+//=============
+// Dependencies
+//=============
 const express = require('express');
 const pg = require('pg');
 const superagent = require('superagent');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.urlencoded({extended: true}));
-app.use(express.static('./public'));
+require('dotenv').config();
 
-//post/get/set
-app.post('/searches', search);
-app.get('/index.ejs', ejsTest);
+app.use(express.urlencoded({extended: true}));
+app.use(express.static(__dirname + '/public'));
+
 app.set('view engine', 'ejs');
 
-app.post('/task', addTask);
-app.get('/addTask', ejsTest);
+//=======================
+// Routes
+//=======================
+app.post('/searches', search);
+app.post('/book', addBook);
 
-const client = new pg.Client('postgres://sarkis7412:armenian@localhost:5432/books_app');
-client.connect();
-client.on('err', err => console.error(err));
+app.get('/index', home);
+// app.get('/books/:books_id', renderBook);
+app.get('/new', newSearch);
+app.get('*', (req, res) => res.status(404).send('This route does not exist'));
 
+//=======================
+// Database - PostgresSQL
+//=======================
 
-function ejsTest(req, res) {
-  res.render('pages/index.ejs');
-}
-app.get('*', (request, response) => response.status(404).send('This route does not exist'));
+const client = new pg.Client(process.env.DATABASE_URL);
 
-app.listen(PORT, () => console.log(`Listening on ${PORT}`));
+client.connect()
+  .then(() => console.log('connected'))
+  .catch(err => console.error('connection error', err.stack))
+client.on('error', err => console.error('|||||||||||client.on|||||||||||||',err));
+console.log(client.query)
 
-function home(request, response) {
-  response.render('pages/index.ejs');
-}
-
-function addTask(req, res) {
-
-  const values = Object.values(req.body);
-  const SQL = `INSERT INTO tasks
+function addBook(req, res) {
+  console.log('|||||||||||addBook req|||||||||||||', req)
+  
+  let newBook = new GoogleBook(req.body);
+  let bookArray = Object.values(newBook)
+  const SQL = `INSERT INTO books
               (title, author, isbn, image_url, description)
-              values($1, $2, $3, $4, $5)`
-  console.log('||||||||||||||||||||||||', client.query(SQL, values))
-  return client.query(SQL, values)
+              VALUES($1, $2, $3, $4, $5)`
+  
+  return client.query(SQL, bookArray)
     .then(res.redirect('/'))
-    .catch(error => {
-      console.log(error)
-      res.send(error)
+    .catch(err => console.error('|||||||||||||||||||addBook||||||||||||||||||||', err));
+  }
+  
+  //=======================
+  // Home Route
+  //=======================
+function home(req, res) {
+  const SQL = 'SELECT * FROM books';
+  console.log('|||||||||||||||||||home||||||||||||||||||||', client.query(SQL))
+  return client.query(SQL)
+    .then(data => {
+      res.render('pages/index', {data: data.rows});
     })
+    .catch(error => res.render('pages/error', {error}));
 }
 
-//Helper Functions
-function search(request, response) {
+function newSearch(req, res){
+  res.render('pages/searches/new.ejs');
+}
 
+//=======================
+// Helper Functions
+//=======================
+function search(req, res) {
+  
   let url = 'https://www.googleapis.com/books/v1/volumes?q=';
-
-  if (request.body.search[1] === 'title') { url += `+intitle:${request.body.search[0]}`; }
-  if (request.body.search[1] === 'author') { url += `+inauthor:${request.body.search[0]}`; }
-
+  if (req.body.search[1] === 'title') { url += `+intitle:${req.body.search[0]}`; }
+  if (req.body.search[1] === 'author') { url += `+inauthor:${req.body.search[0]}`; }
   return superagent.get(url)
     .then(result => {
       let books = result.body.items.map(book => new GoogleBook(book.volumeInfo));
-      response.render('searches/show', {books});
+      res.render('searches/show', {books});
+
+    let SQL = `INSERT INTO books
+    (title, author, isbn, image_url, description)
+    VALUES ($1, $2, $3, $4, $5)`;
+    let values = books[0];
+    
+    return client.query(SQL, [values.title, values.author, values.isbn, values.image_url, values.description]);
 
     })
-    .catch(error => handleError(error));
+    .catch(err => console.error('|||||||||||||||||||search||||||||||||||||||||', err));
 }
-//Constructor
+
+  //=======================
+  // Localhost Listener
+  //=======================
+  app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+  
+  //=======================
+// Constructor
+//=======================
 function GoogleBook(book) {
+
   const placeholderImage = 'https://i.imgur.com/J5LVHEL.jpg';
 
   this.title = book.title || 'No title available';
   this.author = book.authors[0] || 'No authors available';
   this.isbn = book.industryIdentifiers ? `ISBN_13 ${book.industryIdentifiers[0].identifier}` : 'No ISBN available';
-  this.image_url = book.imageLinks ? book.imageLinks.smallThumbnail : placeholderImage;
+  this.image_url = book.imageLinks.smallThumbnail ? book.imageLinks.smallThumbnail : placeholderImage;
   this.description = book.description || 'No description available';
   this.id = book.industryIdentifiers ? `${book.industryIdentifiers[0].identifier}` : '';
+ 
 }
 
-// Error handler
-function handleError(err, res) {
-  console.error(err);
-  if (res) res.status(500).send('Sorry, something went wrong');
-}
+
+

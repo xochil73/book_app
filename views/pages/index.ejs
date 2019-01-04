@@ -4,31 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="/styles/base.css">
   <title>Document</title>
 </head>
 <body>
-  <main>
+  <%- include ../layout/header %>
+  <main class="container">
     <h1>Best Books!</h1>
-    <div></div>
-    <div></div>
-    <div></div>
+    <!-- <div class="hamburger"></div>
+    <div class="hamburger"></div>
+    <div class="hamburger"></div> -->
     <h4>Search by Title or Author</h4>
   
   
-    <form action="/searches" method= POST>
-    <input type="text" name="search" value="Enter a title or author" required>
+    <form id= "form" action="/searches" method= POST>
+    <input id="enter" type="text" name="search" value="Enter a title or author" required>
     <fieldset>
+      <div id="title">
       <label for="title">
         <span>Title</span>
         <input type="radio" name= "search" value="title" required>
       </label>
-      <label for="title">
+    </div>
+
+    <div id="author"> 
+      <label class="form-field">
           <span>Author</span>
           <input type="radio" name= "search" value="author" required>
         </label>
+      </div>
     </fieldset>
-    <button type=submit>Search the Google Books API</button>
+   
+    <button id="submit" type=submit>Search the Google Books API</button>
+  
      </form>
     </main>
   

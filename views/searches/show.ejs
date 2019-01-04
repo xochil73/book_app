@@ -15,7 +15,14 @@
         <h3><%=book.title%></h3>
         <h3><%=book.author%></h3>
         <p><%=book.description%></p>
-        <img src=<%=book.imageLinks %>>
+        <img src=<%=book.image_url %>>
+        <form action="/book.isbn" method="POST"></form>
+        <input type="hidden" value="<%= book.title %>" name="title">
+        <input type="hidden" value="<%= book.author %>" name="title">
+        <input type="hidden" value="<%= book.isbn %>" name="title">
+        <input type="hidden" value="<%= book.imageLinks %>" name="title">
+        <input type="hidden" value="<%= book.description %>" name="title">
+        <input type="submit" value="submit">
       </li>
     <% }) %>
   </ul>
