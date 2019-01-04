@@ -18,6 +18,17 @@ app.set('view engine', 'ejs');
 app.get('/', home);
 app.post('/tasks', addBook);
 app.get('/addBook', showForm);
+app.get('/books/:id', bookDetail);
+
+function bookDetail(req, res) {
+  console.log(req.body, 'HERE I AM!');
+  let SQL = `SELECT * FROM books WHERE id=$1`;
+  let values = [req.params.id];
+  return client.query(SQL, values)
+    .then(result => {
+      res.render('pages/books/show.ejs', {books: result.rows[0]});
+    });
+}
 
 const client = new pg.Client('postgres://root:password@localhost:5432/books_app');
 client.connect();
@@ -40,7 +51,7 @@ function home(req, res) {
   client.query('SELECT * FROM books')
     .then(data => {
       console.log(data, 'home data');
-      res.render('pages/books/show.ejs', {books: data.rows});
+      res.render('pages/books/bookshelf.ejs', {books: data.rows});
     });
 }
 
@@ -82,7 +93,7 @@ function GoogleBook(book) {
   this.title = book.title || 'No title available';
   this.author = book.authors[0] || 'No authors available';
   this.isbn = book.industryIdentifiers ? `ISBN_13 ${book.industryIdentifiers[0].identifier}` : 'No ISBN available';
-  this.image_url = book.imageLinks ? book.imageLinks.smallThumbnail : placeholderImage;
+  this.image_url = book.imageLinks.smallThumbnail ? book.imageLinks.smallThumbnail : placeholderImage;
   this.description = book.description || 'No description available';
   this.id = book.industryIdentifiers ? `${book.industryIdentifiers[0].identifier}` : '';
 }
