@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+    <ul>
+        <% books.forEach(book => { %>
+        <li>
+          <h3><%=book.title%></h3>
+          <h3><%=book.author%></h3>
+          <h3>ISBN: <% book.isbn %></h3>
+          <img src=<%=book.imageLinks %>>
+          <p><%=book.description%></p>
+        </li>
+      <% }) %> 
+    </ul>
+</body>
+</html>

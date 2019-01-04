@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/xochil73/book_app#readme",
   "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^6.2.0",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
     "pg": "^7.7.1",
