@@ -9,16 +9,17 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('./public'));
+require('dotenv').config();
 
 //post/get/set
 app.post('/searches', search);
 app.get('/index.ejs', ejsTest);
 app.set('view engine', 'ejs');
+app.get('/', home);
+app.post('/tasks', addBook);
+app.get('/addBook', showForm);
 
-app.post('/task', addTask);
-app.get('/addTask', ejsTest);
-
-const client = new pg.Client('postgres://sarkis7412:armenian@localhost:5432/books_app');
+const client = new pg.Client('postgres://root:password@localhost:5432/books_app');
 client.connect();
 client.on('err', err => console.error(err));
 
@@ -30,23 +31,32 @@ app.get('*', (request, response) => response.status(404).send('This route does n
 
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 
-function home(request, response) {
-  response.render('pages/index.ejs');
+function showForm(req,res) {
+  res.render('pages/add-view');
 }
 
-function addTask(req, res) {
+//Home Bookshelf
+function home(req, res) {
+  client.query('SELECT * FROM books')
+    .then(data => {
+      console.log(data, 'home data');
+      res.render('pages/books/show.ejs', {books: data.rows});
+    });
+}
+
+function addBook(req, res) {
 
   const values = Object.values(req.body);
-  const SQL = `INSERT INTO tasks
+  const SQL = `INSERT INTO books
               (title, author, isbn, image_url, description)
-              values($1, $2, $3, $4, $5)`
-  console.log('||||||||||||||||||||||||', client.query(SQL, values))
+              values($1, $2, $3, $4, $5)`;
+  console.log('||||||||||||||||||||||||', client.query(SQL, values));
   return client.query(SQL, values)
     .then(res.redirect('/'))
     .catch(error => {
-      console.log(error)
-      res.send(error)
-    })
+      console.log(error);
+      res.send(error);
+    });
 }
 
 //Helper Functions
