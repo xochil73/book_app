@@ -1,5 +1,7 @@
-DROP TABLE IF EXISTS books;
 
+DROP DATABASE books_app;
+CREATE DATABASE books_app;
+\c books_app;
 CREATE TABLE books (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255),
