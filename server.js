@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3000;
 require('dotenv').config();
 
 //=======================
-// Routes 
+// Routes
 //=======================
 
 app.set('view engine', 'ejs');
@@ -50,8 +50,8 @@ function ejsTest(req, res) {
 const client = new pg.Client(process.env.DATABASE_URL);
 
 client.connect()
-.then(() => console.log('connected'))
-.catch(err => console.error('connection error', err.stack))
+  .then(() => console.log('connected'))
+  .catch(err => console.error('connection error', err.stack));
 client.on('error', err => console.error('|||||||||||client.on|||||||||||||',err));
 
 //=======================
@@ -66,23 +66,23 @@ function newSearch(req, res){
 //=======================
 function search(req, res) {
   let url = 'https://www.googleapis.com/books/v1/volumes?q=';
- 
+
   if (req.body.search[1] === 'title') { url += `+intitle:${req.body.search[0]}`; }
   if (req.body.search[1] === 'author') { url += `+inauthor:${req.body.search[0]}`; }
   return superagent.get(url)
-  .then(result => {
-    let books = result.body.items.map(book => new GoogleBook(book.volumeInfo));
-    res.render('searches/show', {books});
-    
-    let SQL = `INSERT INTO books
+    .then(result => {
+      let books = result.body.items.map(book => new GoogleBook(book.volumeInfo));
+      res.render('searches/show', {books});
+
+      let SQL = `INSERT INTO books
     (title, author, isbn, image_url, description)
     VALUES ($1, $2, $3, $4, $5)`;
-    let values = books[0];
-    
-    return client.query(SQL, [values.title, values.author, values.isbn, values.image_url, values.description]);
-    
-  })
-  .catch(err => console.error('|||||||||||||||||||search||||||||||||||||||||', err));
+      let values = books[0];
+
+      return client.query(SQL, [values.title, values.author, values.isbn, values.image_url, values.description]);
+
+    })
+    .catch(err => console.error('|||||||||||||||||||search||||||||||||||||||||', err));
 }
 
 //=======================
@@ -90,18 +90,20 @@ function search(req, res) {
 //=======================
 
 function addBook(req, res) {
-  
+
   let newBook = new GoogleBook(req.body);
-  let bookArray = Object.values(newBook)
+  let bookArray = Object.values(newBook);
   bookArray.pop();
-  console.log('|||||||||||addBook req|||||||||||||', bookArray)
+  console.log(bookArray, 'I am the book array');
+  console.log(req.body, 'this is reqdotbody');
+  console.log('|||||||||||addBook req|||||||||||||', bookArray);
   const SQL = `INSERT INTO books
   (title, author, isbn, image_url, description, bookshelf)
   VALUES($1, $2, $3, $4, $5, $6)`;
-  
+
   return client.query(SQL, bookArray)
-  .then(res.redirect('/'))
-  .catch(err => console.error('|||||||||||||||||||addBook||||||||||||||||||||', err));
+    .then(res.redirect('/'))
+    .catch(err => console.error('|||||||||||||||||||addBook||||||||||||||||||||', err));
 }
 
 
@@ -111,18 +113,18 @@ function addBook(req, res) {
 
 //Home Bookshelf
 function home(req, res) {
-  
+
   client.query('SELECT * FROM books')
-  .then(data => {
-    function uniq(a, param){
-      return a.filter(function(item, pos, array){
-        return array.map(function(mapItem){ return mapItem[param]; }).indexOf(item[param]) === pos;
-      })
-    }
-    
-    let temp = uniq(data.rows, 'title')
-    res.render('pages/books/bookshelf', {books: temp});
-  });
+    .then(data => {
+      function uniq(a, param){
+        return a.filter(function(item, pos, array){
+          return array.map(function(mapItem){ return mapItem[param]; }).indexOf(item[param]) === pos;
+        });
+      }
+
+      let temp = uniq(data.rows, 'title');
+      res.render('pages/books/bookshelf', {books: temp});
+    });
 }
 
 //=======================
@@ -130,12 +132,12 @@ function home(req, res) {
 //=======================
 
 function bookDetail(req,res){
-  console.log('|||||||||||bookDetail||||||||||||||||',req)
-  let SQL = `SELECT * FROM books WHERE id=$1`;
+  console.log('|||||||||||bookDetail||||||||||||||||',req);
+  let SQL = 'SELECT * FROM books WHERE id=$1';
   let values = [req.params.id];
   return client.query(SQL, values)
     .then(result => {
-      console.log('|||||||||||||||||result||||||||||||||', result)
+      console.log('|||||||||||||||||result||||||||||||||', result);
       console.log('Retrieve from DB');
       res.render('pages/books/detail.ejs', {book: result.rows[0]});
     })
@@ -143,13 +145,13 @@ function bookDetail(req,res){
 }
 
 
-  //=======================
-  // Localhost Listener
-  //=======================
-  app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
-  
-  //=======================
-  //=======================
+//=======================
+// Localhost Listener
+//=======================
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+
+//=======================
+//=======================
 // Constructor
 function GoogleBook(book) {
 
@@ -162,7 +164,7 @@ function GoogleBook(book) {
   this.description = book.description || 'No description available';
   this.bookshelf = book.bookshelf || 'unassigned';
   // this.id = book.industryIdentifiers ? `${book.industryIdentifiers[0].identifier}` : '';
- 
+
 }
 
 
