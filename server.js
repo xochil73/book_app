@@ -28,11 +28,11 @@ app.post('/searches', search);
 app.get('/new', newSearch);
 
 app.get('/books/:id', bookDetail);
-app.get('detail')
+// app.get('detail')
 
-app.post('/detail', bookDetail);
+app.post('/books/:id', bookDetail);
 
-app.post('/book', addBook);
+app.post('/books', addBook);
 
 app.get('*', (req, res) => res.status(404).send('This route does not exist'));
 
@@ -90,13 +90,14 @@ function search(req, res) {
 //=======================
 
 function addBook(req, res) {
-  console.log('|||||||||||addBook req|||||||||||||', req)
   
   let newBook = new GoogleBook(req.body);
   let bookArray = Object.values(newBook)
+  bookArray.pop();
+  console.log('|||||||||||addBook req|||||||||||||', bookArray)
   const SQL = `INSERT INTO books
-  (title, author, isbn, image_url, description)
-  VALUES($1, $2, $3, $4, $5)`
+  (title, author, isbn, image_url, description, bookshelf)
+  VALUES($1, $2, $3, $4, $5, $6)`;
   
   return client.query(SQL, bookArray)
   .then(res.redirect('/'))
@@ -128,20 +129,18 @@ function home(req, res) {
 // Single Book Details
 //=======================
 
-function bookDetail(req, res) {
-  console.log('||||||||||||||||||||TEST|||||||||||||||||||||')
-    console.log(req.body)
-    console.log('||||||||||||||||||||TEST|||||||||||||||||||||')
-  res.render('pages/books/detail', {
-    title: req.body.title,
-    author: req.body.author,
-    isbn: req.body.isbn,
-    image: req.body.image,
-    description: req.body.description,
-   
-  })
+function bookDetail(req,res){
+  console.log('|||||||||||bookDetail||||||||||||||||',req)
+  let SQL = `SELECT * FROM books WHERE id=$1`;
+  let values = [req.params.id];
+  return client.query(SQL, values)
+    .then(result => {
+      console.log('|||||||||||||||||result||||||||||||||', result)
+      console.log('Retrieve from DB');
+      res.render('pages/books/detail.ejs', {book: result.rows[0]});
+    })
+    .catch(err => (err, res));
 }
-
 
 
   //=======================
@@ -150,18 +149,19 @@ function bookDetail(req, res) {
   app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
   
   //=======================
+  //=======================
 // Constructor
-//=======================
 function GoogleBook(book) {
 
   const placeholderImage = 'https://i.imgur.com/J5LVHEL.jpg';
 
-  this.title = book.title || 'No title available';
-  this.author = book.authors[0] || 'No authors available';
-  this.isbn = book.industryIdentifiers ? `ISBN_13 ${book.industryIdentifiers[0].identifier}` : 'No ISBN available';
-  this.image_url = book.imageLinks.smallThumbnail ? book.imageLinks.smallThumbnail : placeholderImage;
+  this.title = book.title|| 'No authors available';
+  this.author = book && book.volumeInfo && book.volumeInfo.authors || 'No authors available';
+  this.isbn = book && book.volumeInfo && book.volumeInfo.industryIdentifiers && book.volumeInfo[0] && book.volumeInfo[0].type + book.volumeInfo.industryIdentifiers[0].identifier ? `ISBN_13 ${book.industryIdentifiers[0].identifier}` : 'No ISBN available';
+  this.image_url = book && book.volumeInfo && book.volumeInfo.imageLinks.thumbnail || placeholderImage;
   this.description = book.description || 'No description available';
-  this.id = book.industryIdentifiers ? `${book.industryIdentifiers[0].identifier}` : '';
+  this.bookshelf = book.bookshelf || 'unassigned';
+  // this.id = book.industryIdentifiers ? `${book.industryIdentifiers[0].identifier}` : '';
  
 }
 

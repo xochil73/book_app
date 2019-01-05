@@ -17,16 +17,17 @@
           <h3>ISBN: <%= book.isbn %></h3>
           <img src=<%=book.image_url %>>
           <p><%=book.description%></p>
+          <a href="/books/<%= book.id %>">View Detail Description</a>
         </li>
-        <form action="/detail" method="POST">
-        <!-- <button id="submit" type="submit">SELECT THIS BOOK</button> -->
+        <!-- <form action="/detail" method="POST">
+      
         <input type="hidden" value="<%=book.title%>" name="title">
         <input type="hidden" value="<%=book.author%>" name="author">
         <input type="hidden" value="<%=book.isbn%>" name="isbn">
         <input type="hidden" value="<%=book.image_url %>" name="image">
         <input type="hidden" value="<%=book.description%>" name="description">
         <input type="submit" value="submit">
-        </form>
+        </form> -->
         <% }) %> 
     </ul>
     
