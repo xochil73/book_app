@@ -6,38 +6,14 @@ CREATE TABLE books (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255),
     author VARCHAR(255),
-    isbn NUMERIC,
+    isbn VARCHAR(255),
     image_url VARCHAR(255),
-    description VARCHAR(3000)
+    description TEXT 
 );
 
-INSERT INTO books (
-    title,
-    author,
-    isbn,
-    image_url,
-    description
-)
-VALUES (
-    'Think Like a Cat',
-    'Pam Johnson-Bennett',
-    9781101552674,
-    'http://books.google.com/books/content?id=I_oU6Ib9nt8C&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api',
-    'America''s favorite cat behavior expert, author of Catwise and Cat vs. Cat, offers the most complete resource for cat owners of all stripes, now fully updated and revised. \"The queen of cat behavior\" - Steve Dale, author of My Pet World Think it''s impossible to train a cat? Think again! By learning how to think like a cat, you''ll be amazed at just how easy it is. Whether you are a veteran cat lover, a brand-new owner of a sweet kitten, or the frustrated companion of a feline whose driving you crazy, Pam Johnson-Bennett will help you understand what makes your cat tick (as well as scratch and purr). Topics range from where to get a cat to securing a vet; from basic health care to treating more serious problems; choosing an inrresistible scratching post and avoiding litterbox problems. A comprehensive guide to cat care and training, she helps you understand the instincts that guide feline behavior. Using behavior modification and play therapy techniques, she shares successful methods that will help you and your cat build a great relationship. From the Trade Paperback edition.'
-);
 
-INSERT INTO books (
-    title,
-    author,
-    isbn,
-    image_url
-    description
-)
-VALUES (
-    'The Behaviour of the Domestic Cat',
-    'John W. S. Bradshaw',
-    1780641206,
-    'http://books.google.com/books/content?id=CMQdnrR0xEsC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
-    'Describing feline behaviour from both a mechanistic and functional approach, this textbook provides an accessible overview of this fascinating subject. The book begins by addressing physiological, developmental and psychological aspects, with chapters on domestication, the development of the senses, learning, communication and feeding behaviour. The authors then build on this foundation to discuss social behaviour, hunting and predation, cat-human interactions and welfare. Fully updated throughout, this new edition also includes two new chapters on behavioural disorders due to pathologies and.'
+INSERT INTO books (title, author, isbn, image_url, description) 
+VALUES('The Shining','Stephen King',9780385528863,'https://www.googleapis.com/books/v1/volumes/8VnJLu3AvvQC','With an excerpt from the sequel, Doctor Sleep. Terrible events occur at an isolated hotel in the off season, when a small boy with psychic powers struggles to hold his own against the forces of evil that are driving his father insane.');
 
-);
+INSERT INTO books (title, author, isbn, image_url, description) 
+VALUES('Demons','Fyodor Dostoyevsky',9781773139821,'https://www.googleapis.com/books/v1/volumes/3Nt8DwAAQBAJ','Demons is an anti-nihilistic novel by Fyodor Dostoyevsky. It is the third of the four great novels written by Dostoyevsky after his return from Siberian exile, the others being Crime and Punishment, The Idiot and The Brothers Karamazov. Demons is a social and political satire, a psychological drama, and large scale tragedy.');

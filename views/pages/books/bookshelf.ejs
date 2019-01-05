@@ -7,18 +7,27 @@
   <title>Document</title>
 </head>
 <body>
+  
     <ul>
 
         <% books.forEach(book => { %>
         <li>
           <h3><%=book.title%></h3>
           <h3><%=book.author%></h3>
-          <h3>ISBN: <% book.isbn %></h3>
-          <img src=<%=book.imageLinks %>>
+          <h3>ISBN: <%= book.isbn %></h3>
+          <img src=<%=book.image_url %>>
           <p><%=book.description%></p>
-          <button id="submit" type="submit">SELECT THIS BOOK</button>
         </li>
-      <% }) %> 
+        <form action="/detail" method="POST">
+        <!-- <button id="submit" type="submit">SELECT THIS BOOK</button> -->
+        <input type="hidden" value="<%=book.title%>" name="title">
+        <input type="hidden" value="<%=book.author%>" name="author">
+        <input type="hidden" value="<%=book.isbn%>" name="isbn">
+        <input type="hidden" value="<%=book.image_url %>" name="image">
+        <input type="hidden" value="<%=book.description%>" name="description">
+        <input type="submit" value="submit">
+        </form>
+        <% }) %> 
     </ul>
     
 </body>
