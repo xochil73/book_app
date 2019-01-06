@@ -28,11 +28,15 @@ app.post('/searches', search);
 app.get('/new', newSearch);
 
 app.get('/books/:id', bookDetail);
-// app.get('detail')
+
 
 app.post('/books/:id', bookDetail);
 
 app.post('/books', addBook);
+
+// Edit route
+app.get('/books/edit/:id', editBook)
+app.post('/books/edit/:id', editBook)
 
 app.get('*', (req, res) => res.status(404).send('This route does not exist'));
 
@@ -94,7 +98,6 @@ function addBook(req, res) {
   let newBook = new GoogleBook(req.body);
   let bookArray = Object.values(newBook)
   bookArray.pop();
-  console.log('|||||||||||addBook req|||||||||||||', bookArray)
   const SQL = `INSERT INTO books
   (title, author, isbn, image_url, description, bookshelf)
   VALUES($1, $2, $3, $4, $5, $6)`;
@@ -130,17 +133,37 @@ function home(req, res) {
 //=======================
 
 function bookDetail(req,res){
-  console.log('|||||||||||bookDetail||||||||||||||||',req)
+  
   let SQL = `SELECT * FROM books WHERE id=$1`;
   let values = [req.params.id];
   return client.query(SQL, values)
     .then(result => {
-      console.log('|||||||||||||||||result||||||||||||||', result)
       console.log('Retrieve from DB');
       res.render('pages/books/detail.ejs', {book: result.rows[0]});
     })
     .catch(err => (err, res));
 }
+
+//=======================
+// Edit Function
+//=======================
+
+function editBook(req, res) {
+  let SQL = `SELECT * FROM books WHERE id=$1`;
+  let values = [req.params.id];
+  return client.query(SQL, values)
+    .then(result => {
+      console.log('|||||||||||||||||||||||test||||||||||||||||||||||')
+      console.log('||||||||editBook|||||||||||', result)
+      console.log('|||||||||||||||||||||||||||||||||||||||||||||')
+      res.render('pages/books/edit.ejs', { book: result.rows[0] }, err => (console.error(err)), 
+      )
+    })
+    .catch(err => {
+      console.log(err, 'database request error')  
+    })
+  }
+
 
 
   //=======================

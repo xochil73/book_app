@@ -1,8 +1,7 @@
 
-DROP DATABASE books_app;
-CREATE DATABASE books_app;
-\c books_app;
-CREATE TABLE books (
+DROP TABLE IF EXISTS books;
+
+CREATE TABLE IF NOT EXISTS books (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255),
     author VARCHAR(255),
