@@ -1,58 +1,46 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
   <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="jquery-3.3.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"
+    integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+    crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/styles/base.css">
+    <link rel="stylesheet" href="/styles/layout.css">
+    <link rel="stylesheet" href="/styles/modules.css">
 
-    <title>Book Collection</title>
-
-    <link rel="stylesheet" href="styles/base.css">
-
-    <link rel="stylesheet" href="styles/reset.css">
-
+    <title>Book App</title>
   </head>
 
   <body>
+      <%- include('../../partials/head.ejs') %>
+      <div class="current-page"><h2>New Search</h2></div>
 
-    <%- include ../../layout/header %>
+      <main>
+        <form class="new" action="/searches" method="post">
+          <input class="text" type="text" name="search" placeholder="Type a Title or an Author" required>
+          
+          <fieldset> Search Type:
 
-    <main>
+            <label for="title">
+              <input id="title" class="radio" type="radio" name="search" value="title" required>
+              <span>Title</span>
+            </label>
 
-      <h4>Search by Title or Author</h4>
+            <label for="author">
+              <input id="author" class="radio" type="radio" name="search" value="author" required>
+              <span>Author</span>
+            </label>
 
-      <form action="/searches" method="post">
-
-        <input id="search" type="text" name="search" placeholder="Enter a title or author" required>
-
-        <fieldset class= "options">
-
-          <label for="title">
-
-            <span >Title</span>
-
-            <input type="radio" name="search" value="title" required>
-
-          </label>
-
-        </fieldset>
-
-        <fieldset class="options">
-
-          <label for="author">
-
-            <span >Author</span>
-
-            <input type="radio" name="search" value="author" required>
-
-          </label>
-
-        </fieldset>
-
-        <button type="submit">Search the Google Books API</button>
-
-      </form>
-
-    </main>
+          </fieldset>
+          
+          <button type="submit">Ask Google!</button>
+        </form>
+      </main>
 
   </body>
 

@@ -1,20 +1,29 @@
-<section>
-    <ul>
-   
-        <li> 
-          <h3><%=book.title%></h3>
-          <h3><%=book.author%></h3>
-          <h3>ISBN: <%= book.isbn %></h3>
-          <img src=<%=book.image_url %>>
-          <p><%=book.description%></p>
-        </li>
-        
-    </ul>
-    <form action="/books/<%= book.id %>" method="POST"></form>
-        <input type="hidden" value="<%= book.title %>" name="title">
-        <input type="hidden" value="<%= book.author %>" name="title">
-        <input type="hidden" value="<%= book.isbn %>" name="title">
-        <input type="hidden" value="<%= book.image_url %>" name="title">
-        <input type="hidden" value="<%= book.description %>" name="title">
-        <input type="submit" value="submit">
-  </section>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/styles/base.css">
+    <link rel="stylesheet" href="/styles/layout.css">
+    <link rel="stylesheet" href="/styles/modules.css">
+
+    <title>Book App</title>
+</head>
+<body>
+        <%- include ../../layout/header %>
+    <section>
+         
+        <ul> 
+            <li> 
+                <h3><%=book.title%></h3>
+                <h3><%=book.author%></h3>
+                <h3>ISBN: <%= book.isbn %></h3>
+                <img src=<%=book.image_url %>>
+                <p><%=book.description%></p>
+            </li>   
+        </ul>
+    </section>
+    
+</body>
+</html>

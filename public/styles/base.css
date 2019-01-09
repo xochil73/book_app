@@ -1,62 +1,10 @@
 body {
-  background-color: grey;
+  background-color: rgb(108, 155, 177);
+  margin: 40px;
 }
-/*10 rows*/
-/*6 columns*/
 
 header {
   float: right;
 }
 
-#form {
-  border: lightgrey;
-}
 
-label, input {
-  display: block;
-}
-
-label {
-  width: 80%;
-  margin-bottom: 5%;
-}
-
-#enter {
-  height: 50%;
-  font-size: 110%;
-  margin-bottom: 5%;
-}
-
-#title {
-  border: solid 1px black;
-  width: 80%;
-  margin-bottom: 5%;
-  margin-left: 10%;
-  background-color: lightgrey;
-}
-
-#author {
-  border: solid 1px black;
-  width: 80%;
-  margin-top: 5%;
-  margin-left: 10%;
-  background-color: lightgrey;
-}
-
-input {
-  width: 80%;
-  margin-left: 10%;
-}
-
-
-
-#submit {
-  width: 80%;
-  height: 100%;
-  margin-top: 5%;
-  margin-left: 10%;
-  padding: 14px 28px;
-  font-size: 16px;
-  background-color: black;
-  color: white;
-}
