@@ -2,19 +2,17 @@
     <head>
         <style>
             body {background-color: rgb(108, 155, 177);}
-            #update-button {position:relative; margin-top: -10%; float: left; width: 5%;}
+            #update-button {position:relative; margin-top: -5%; margin-left: -30%; float: left; width: 5%; height: 150%;}
         </style>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script>
             $(document).ready(function(){
-                $("#formButton").click(function(){
-                    $("p").toggle();
+                $("#formButton").click(function()
+                    $("form").toggle();
                 });
             });
         </script>
     </head>
-
-    <%-include ../../layout/header%>
    
         <button type="button" id="formButton">Display Form</button>
         <p>

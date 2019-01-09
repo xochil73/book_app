@@ -37,12 +37,12 @@ app.set('view engine', 'ejs');
 
 //Home/Search route
 app.get('/', home);
-// app.post('/', home);
+
 app.get('/index', searchPage);
 
 //New search route
 app.post('/searches', search);
-app.get('/new', newSearch);
+// app.get('/new', newSearch);
 
 //Book Detail/Save route
 app.get('/books/:id', bookDetail);
@@ -80,9 +80,9 @@ client.on('error', err => console.error('|||||||||||client.on|||||||||||||',err)
 //=======================
 // New Search
 //=======================
-function newSearch(req, res){
-  res.redirect('/');
-}
+// function newSearch(req, res){
+//   res.redirect('/searches');
+// }
 
 //=======================
 // Search Function
@@ -230,12 +230,12 @@ function search(req, res) {
   //=======================
 
   function GoogleBook(book) {
-
+console.log(book)
     const placeholderImage = 'https://i.imgur.com/J5LVHEL.jpg';
     this.title = book.title|| 'No title available';
     this.author = book.authors || 'No authors available';
     this.isbn = book && book.volumeInfo && book.volumeInfo.industryIdentifiers && book.volumeInfo[0] && book.volumeInfo[0].type + book.volumeInfo.industryIdentifiers[0].identifier ? `ISBN_13 ${book.industryIdentifiers[0].identifier}` : 'No ISBN available';
-    this.image_url = book && book.volumeInfo && book.volumeInfo.imageLinks && book.volumeInfo.imageLinks.thumbnail || placeholderImage;
+    this.image_url = book && book.imageLinks && book.imageLinks.thumbnail || placeholderImage;
     this.description = book.description || 'No description available';
     this.bookshelf = book.bookshelf || 'unassigned';
 
