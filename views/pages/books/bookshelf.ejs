@@ -1,33 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="jquery-3.3.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"
+    integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+    crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/styles/base.css">
+    <link rel="stylesheet" href="/styles/layout.css">
+    <link rel="stylesheet" href="/styles/modules.css">
+
+    <title>Book App</title>
 </head>
 <body>
-  
+     
+      <%- include ../../layout/header %>
+
     <ul>
 
         <% books.forEach(book => { %>
         <li>
+          <div id="highlight">
           <h3><%=book.title%></h3>
           <h3><%=book.author%></h3>
           <h3>ISBN: <%= book.isbn %></h3>
           <img src=<%=book.image_url %>>
+        </div>
+        <div id="description">
           <p><%=book.description%></p>
-          <a href="/books/<%= book.id %>">View Detail Description</a>
+          <button><a href="/books/<%= book.id %>">View Detail Description</a></button>
+        </div>
         </li>
-        <!-- <form action="/detail" method="POST">
-      
-        <input type="hidden" value="<%=book.title%>" name="title">
-        <input type="hidden" value="<%=book.author%>" name="author">
-        <input type="hidden" value="<%=book.isbn%>" name="isbn">
-        <input type="hidden" value="<%=book.image_url %>" name="image">
-        <input type="hidden" value="<%=book.description%>" name="description">
-        <input type="submit" value="submit">
-        </form> -->
+        <form action="/books/<%= book.id %>" method="POST">
+            <input type="hidden" name="_method" value="DELETE">
+            <input type="submit" value="Remove Book">
+          </form>
         <% }) %> 
     </ul>
     

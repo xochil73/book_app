@@ -1,27 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Book Detail</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?" family=Alegreya|Alegreya+SC|Alegreya+Sans|Alegreya+Sans+SC|Playfair+Display|Playfair+Display+SC" rel="stylesheet">
-    <link rel="icon" type="png" href="../../../images/book_favicon.png"/>
-    
-</head>
 <body>
-    <%include ../../layout/header%>
-    <main class="flex-column">
-        <form action="/books/edit/<%=book.id%>" method="POST">
+    <head>
+        <style>
+            body {background-color: rgb(108, 155, 177);}
+            #update-button {position:relative; margin-top: -10%; float: left; width: 5%;}
+        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script>
+            $(document).ready(function(){
+                $("#formButton").click(function(){
+                    $("p").toggle();
+                });
+            });
+        </script>
+    </head>
+
+    <%-include ../../layout/header%>
+   
+        <button type="button" id="formButton">Display Form</button>
+        <p>
+        <form id="edit-form" action="/books/edit/<%=book.id%>" method="POST">
         <input type="text" value="<%= book.title%>" name="title">
         <input type="text" value="<%= book.author%>" name="author">
-        <input type="text" value="<%= book.isbn%>" name="isbn">
-        <input type="text" value="<%= book.image_url%>" name="image_url">
         <input type="text" value="<%= book.description%>" name="description">
+        <input type="text" value="<%= book.bookshelf%>" name="bookshelf">
         <input type="select" name="bookshelf">
-        <input type="submit" value="Save to Collection">
-        </form>
-    </main>
+        <input type="submit" value="Edit Book" class="edit-button" action="" method="POST">
+        <input type="hidden" name="_method" value="PUT">
+        <button type="submit" id="update-button">Update Bookshelf</button>
+    </form>
+    </p>    
+  
     <%include ../../layout/footer%>
     </body>
     </html>
