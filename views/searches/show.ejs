@@ -25,19 +25,21 @@
       <li>
         <h3><%=book.title%></h3>
         <h3><%=book.author%></h3>
-        <p><%=book.description%></p>
+        <h3><%=book.isbn%></h3>
+        <h3><%=book.imageLinks%></h3>
+        <p>
+        <ul><li><%=book.description%></li></ul>
+        </p>
         <img src=<%=book.image_url %>>
         <form action="/books" method="POST">
         <input type="hidden" value="<%= book.title %>" name="title">
-        <input type="hidden" value="<%= book.author %>" name="title">
-        <input type="hidden" value="<%= book.isbn %>" name="title">
-        <input type="hidden" value="<%= book.imageLinks %>" name="title">
-        <input type="hidden" value="<%= book.description %>" name="title">
+        <input type="hidden" value="<%= book.author %>" name="author">
+        <input type="hidden" value="<%= book.isbn %>" name="isbn">
+        <input type="hidden" value="<%= book.imageLinks %>" name="image_url">
+        <input type="hidden" value="<%= book.description %>" name="description">
         <input type="submit" value="Save This Book">
-        <button><a href="/books/<%= book.id %>">View Detail Description</a></button>
+        <input type="submit" value="View Detail Description" class="detail-button" action="/books/<%= book.id %>" method="POST">
         </form>
-          
-      </form>
       </li>
     <% }) %>
   </ul>
